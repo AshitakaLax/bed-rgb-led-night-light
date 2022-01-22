@@ -3,6 +3,7 @@
 # in order to run the 
 # sudo pip3 install rpi_ws281x adafruit-circuitpython-neopixel
 # Simple test for NeoPixels on Raspberry Pi
+# https://learn.adafruit.com/adafruit-neopixel-uberguide/python-circuitpython
 import time
 import board
 import neopixel
