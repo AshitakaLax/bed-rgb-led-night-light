@@ -1,2 +1,4 @@
-rpi_ws281x
+gpiozero
+
 adafruit-circuitpython-neopixel
+rpi_ws281x

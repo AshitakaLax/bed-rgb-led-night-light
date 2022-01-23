@@ -15,7 +15,6 @@ from signal import pause
 #GPIO.setmode(GPIO.BOARD)
 buttonPin = 16 # board.D23
 button = Button(23)
-#GPIO.setup(buttonPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 # Choose an open pin connected to the Data In of the NeoPixel strip, i.e. board.D18
 # NeoPixels must be connected to D10, D12, D18 or D21 to work.
