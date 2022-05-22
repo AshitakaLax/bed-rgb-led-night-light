@@ -113,7 +113,6 @@ def greenLightTrack():
         pixels.show()
         time.sleep(0.125)
         
-
 # track lighting move the leds blank 2 one on moving.
 
 def setPixelDecimal(countingNumber, pixelOffset, numberOfPixels, rgb):
@@ -254,7 +253,79 @@ def ledFadeRed():
     # turn off the LEDs
     pixels.fill((0, 0, 0))
     pixels.show()
+    
+def redBreathingTraining():
+    # this pattern will raise at a rate based on https://www.uptodate.com/contents/image/print?imageKey=EM%2F78097
+    #
+    global endLedEffect 
+    age=6
+    breathCount=get_breaths_per_min(age)
+    # Get the number of milseconds between pulses
+    millisecondsPerPulse=60000/breathCount
+    # the pattern will rise from one side up to the end of the other side.
+    for tenMillisecond in range(0, millisecondsPerPulse, 10):
+        # increment by 10 miliseconds
+        if endLedEffect == True:
+            print('cancel the LED effect early')
+            pixels.fill((0, 0, 0))   
+            pixels.show()
+            endLedEffect = False
+            return
+        
+        setRunningLightTrack(seconds, (255, 0, 0))
+    pixels.show()
+    time.sleep(0.125)
 
+def set_led_pulse_level(millisecond, millisecondsPerPulse):
+    # Based on this paper your inhale to Exhale ratio is 2.33 https://www.thebreathingdiabetic.com/van-diest-et-al-2014
+    
+    #check if pulse is Inhaling
+    inhaleToExhaleRatio=0.429
+    totalInhalingTime=millisecondsPerPulse-(millisecondsPerPulse*inhaleToExhaleRatio)
+    totalExhalingTime=millisecondsPerPulse-totalInhalingTime
+    
+    # TODO: potentially add a setting that would represent the led color associated with the blood color
+    # start out blue at the begining of inhale to red at the beginning of exhale
+    isInhaling=True
+    if(millisecond < (millisecondsPerPulse*inhaleToExhaleRatio)):
+        isInhaling=False
+    
+    # determine what percentage they have completed of the inhale or exhale
+    currentRelativeTime = millisecond
+    percentage = millisecond/totalExhalingTime
+    if(isInhaling):
+        currentRelativeTime = millisecond-totalExhalingTime
+        percentage = currentRelativeTime/totalInhalingTime
+    
+    # set the led red
+    for i in range(num_pixels):
+        pixels[i] = ((percentage * 255), 0, 0)
+    pixels.show()
+
+
+
+    
+def get_breaths_per_min(age):
+    # returns the number of breaths per minute based on their age starting at age 4+.
+    # source of breathing rate https://www.uptodate.com/contents/image/print?imageKey=EM%2F78097
+    match age:
+        case 4:
+            return 25
+        case 5:
+            return 23
+        case 6:
+            return 21
+        case 7:
+            return 20
+        case 8:
+            return 19
+        case 9:
+            return 19
+        case 10:
+            return 18
+        case _:
+            return 18
+             
 def handle_button_press():
     global led_pattern
     global endLedEffect
